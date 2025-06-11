@@ -1,8 +1,12 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore, enableIndexedDbPersistence } from "firebase/firestore";
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import {
+  getFirestore,
+  enableIndexedDbPersistence,
+  serverTimestamp,
+} from 'firebase/firestore';
 
-const firebaseConfig = {
+const cfg = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
@@ -11,9 +15,10 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(cfg);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+enableIndexedDbPersistence(db).catch(console.warn);
 
-// Enable offline persistence
-enableIndexedDbPersistence(db).catch(console.error);
+// ✅ Add this line
+export const timestamp = serverTimestamp;
