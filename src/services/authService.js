@@ -1,14 +1,22 @@
-import { auth } from './firebase';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-} from 'firebase/auth';
+// src/services/authService.js
+import { supabase } from '../config';
 
-export const register = (email, pw) =>
-  createUserWithEmailAndPassword(auth, email, pw);
+export const signUp = async (email, password) => {
+  const { data, error } = await supabase.auth.signUp({ email, password });
+  return { data, error };
+};
 
-export const login = (email, pw) =>
-  signInWithEmailAndPassword(auth, email, pw);
+export const signIn = async (email, password) => {
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  return { data, error };
+};
 
-export const logout = () => signOut(auth);
+export const signOut = async () => {
+  const { error } = await supabase.auth.signOut();
+  return error;
+};
+
+export const getSession = async () => {
+  const { data } = await supabase.auth.getSession();
+  return data.session;
+};
