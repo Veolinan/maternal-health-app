@@ -1,18 +1,14 @@
-import { supabase } from '../services/supabase';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
-export const useAuth = () => {
-  const login = async (email, password) => {
-    return await supabase.auth.signInWithPassword({ email, password });
-  };
+const useAuth = () => {
+  const context = useContext(AuthContext);
 
-  const logout = async () => {
-    return await supabase.auth.signOut();
-  };
+  if (!context) {
+    throw new Error('useAuth must be used within AuthProvider');
+  }
 
-  const getUser = () => {
-    return supabase.auth.getUser();
-  };
-
-  return { login, logout, getUser };
+  return context;
 };
+
 export default useAuth;

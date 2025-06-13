@@ -1,22 +1,32 @@
-// src/services/authService.js
-import { supabase } from '../config';
+import { supabase } from './supabase';
 
-export const signUp = async (email, password) => {
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  return { data, error };
-};
+export const authService = {
+  login: async (email, password) => {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    return data;
+  },
 
-export const signIn = async (email, password) => {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  return { data, error };
-};
+  register: async ({ email, password, full_name, role, hospital_id }) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name, role, hospital_id },
+      },
+    });
+    if (error) throw error;
+    return data;
+  },
 
-export const signOut = async () => {
-  const { error } = await supabase.auth.signOut();
-  return error;
-};
+  logout: async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+  },
 
-export const getSession = async () => {
-  const { data } = await supabase.auth.getSession();
-  return data.session;
+  getCurrentUser: async () => {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error) throw error;
+    return user;
+  }
 };

@@ -1,6 +1,6 @@
 import supabase from '../../supabaseClient';
 
-export const fetchPatients = async () => {
+export const patientService = async () => {
   const { data, error } = await supabase
     .from('view_patient_summary')
     .select('*')
